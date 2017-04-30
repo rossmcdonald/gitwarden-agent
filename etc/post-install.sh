@@ -41,13 +41,15 @@ if [[ "$(readlink /proc/1/exe)" == */systemd ]]; then
     fi
 else
     # sysv systems
-    cp -f /usr/lib/gitwarden/gitwarden-agent.sh /etc/init.d/gitwarden-agent
+    cp -f /usr/lib/gitwarden/gitwarden-agent.init /etc/init.d/gitwarden-agent
     chmod +x /etc/init.d/gitwarden-agent
 
     which update-rc.d &>/dev/null && update-rc.d gitwarden-agent defaults
     which chkconfig &>/dev/null && chkconfig --add gitwarden-agent
 
     if [[ -f /etc/debian_version ]]; then
-        which invoke-rc.d &>/dev/null && gitwarden-agent restart
+        which invoke-rc.d &>/dev/null && invoke-rc.d gitwarden-agent restart
     fi
 fi
+
+exit 0

@@ -24,6 +24,8 @@
 # https://github.com/gitwarden/gitwarden-agent
 #
 
+set -x
+
 if [[ "$(readlink /proc/1/exe)" == */systemd ]]; then
     # systemd systems
     systemctl disable gitwarden-agent
@@ -34,3 +36,5 @@ else
 
     test -f /etc/init.d/gitwarden-agent && rm -f /etc/init.d/gitwarden-agent
 fi
+
+exit 0
