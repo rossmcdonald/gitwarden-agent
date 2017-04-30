@@ -25,10 +25,10 @@
 #
 
 # Create data directory, if not already present
-test -d /var/lib/gitwarden-agent || mkdir -p /var/lib/gitwarden-agent
+test -d /var/lib/gitwarden || mkdir -p /var/lib/gitwarden
 
 # Touch data file, if not already present
-test -f /var/lib/gitwarden-agent/gitwarden-data.yml || touch /var/lib/gitwarden-agent/gitwarden-data.yml
+test -f /var/lib/gitwarden/gitwarden-data.yml || touch /var/lib/gitwarden/gitwarden-data.yml
 
 if [[ "$(readlink /proc/1/exe)" == */systemd ]]; then
     # systemd systems
