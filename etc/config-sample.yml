@@ -12,7 +12,7 @@ api_key: CHANGEME
 teams:
   - Developers
 
-# admin_teams is a list of Github tmeas that should be given administrative
+# admin_teams is a list of Github teams that should be given administrative
 # access on the bootstrapped server. If not specified, no users created will be
 # given sudo access. Can be overridden via the GITWARDEN_ADMIN_TEAMS environment
 # variable.
