@@ -10,7 +10,7 @@
 
 # Script sleeps for START_TIMEOUT seconds after calling start to
 # validate the process started correctly
-START_TIMEOUT=4
+START_TIMEOUT=2
 
 # Script to execute when starting
 SCRIPT="/usr/sbin/gitwarden-agent"
