@@ -1,0 +1,28 @@
+# api_key is the GitWarden API key the agent will use when communicating with
+# the GitWarden registry. Can be overridden via the GITWARDEN_API_KEY
+# environment variable. This option is _required_.
+
+api_key: CHANGEME
+
+# teams is a list of Github teams that should have users created for them on the
+# bootstrapped server. Be sure to use the full name of any team specified,
+# complete with spaces or special characters. Can be overridden via the
+# GITWARDEN_TEAMS environment variable. This option is _required_.
+
+teams:
+  - Developers
+
+# admin_teams is a list of Github tmeas that should be given administrative
+# access on the bootstrapped server. If not specified, no users created will be
+# given sudo access. Can be overridden via the GITWARDEN_ADMIN_TEAMS environment
+# variable.
+
+admin_teams:
+  - System Administrators
+  - Support
+
+# log_level dictates the granularity of the agent logs. If not specified, it
+# will default to INFO. Can be overridden via the GITWARDEN_LOG_LEVEL
+# environment variable. Valid options are: DEBUG, INFO, WARN, and ERROR
+
+log_level: INFO

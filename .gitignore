@@ -1,0 +1,8 @@
+.vagrant/
+gitwarden-agent
+build/
+*~
+*#
+*rpm
+*deb
+gitwarden.yml

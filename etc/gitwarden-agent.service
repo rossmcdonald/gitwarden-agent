@@ -1,0 +1,11 @@
+[Unit]
+Description=Linux user management agent, used for communicating with the GitWarden registry
+Documentation=https://gitwarden.com/documentation/
+After=network-online.target
+
+[Service]
+ExecStart=/usr/sbin/gitwarden-agent
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

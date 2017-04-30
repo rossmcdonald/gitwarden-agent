@@ -1,0 +1,20 @@
+FROM golang:latest
+
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    build-essential \
+    git \
+    ruby \
+    ruby-dev \
+    rubygems \
+    rpm \
+    zip
+
+RUN gem install fpm
+
+ENV PROJECT_PATH $GOPATH/src/github.com/gitwarden/gitwarden-agent
+RUN mkdir -p $PROJECT_PATH
+
+WORKDIR $PROJECT_PATH
+VOLUME $PROJECT_PATH
+CMD [ "make", "gitwarden-agent" ]
