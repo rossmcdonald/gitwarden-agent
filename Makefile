@@ -27,9 +27,9 @@ GIT_BRANCH = $(shell git rev-parse --abbrev-ref HEAD)
 GIT_TAG = $(shell git describe --always --tags --abbrev=0 | tr -d 'v')
 GIT_COMMIT = $(shell git rev-parse HEAD)
 
-all: envcheck restore gitwarden-agent ## Build everything
+all: envcheck gitwarden-agent ## Build everything
 
-gitwarden-agent: ## Generate a build for each target
+gitwarden-agent: ## Generate a build of the gitwarden-agent
 	$(eval LINKER_FLAGS = -X main.version=$(GIT_TAG) -X main.branch=$(GIT_BRANCH) -X main.commit=$(GIT_COMMIT))
 ifeq ($(static), true)
 	$(eval COMPILE_PREPEND = CGO_ENABLED=0 )
@@ -40,25 +40,12 @@ endif
 	@echo "Building '$@'"
 	$(COMPILE_PREPEND)go build $(COMPILE_PARAMS)./cmd/$@
 
-release: cleanroom ## Tag and generate a release build (example: make release version=1.2.3)
+release: ## Tag and generate a release build (example: make release version=1.2.3)
 
 envcheck: ## Check environment for any common issues
 ifneq ($(shell which go &>/dev/null; echo $$?),0)
 	$(error "Go not installed.")
 endif
-
-cleanroom: ## Create a 'clean room' build
-ifneq ($(shell git diff-files --quiet --ignore-submodules -- ; echo $$?), 0)
-	$(error "Uncommitted changes in the current directory.")
-endif
-	$(eval CURR_DIR = $(shell pwd))
-	$(eval TEMP_DIR = $(shell mktemp -d))
-	mkdir -p $(TEMP_DIR)/src/github.com/gitwarden/gitwarden-agent
-	cp -r . $(TEMP_DIR)/src/github.com/gitwarden/gitwarden-agent
-	cd $(TEMP_DIR)/src/github.com/gitwarden/gitwarden-agent
-	GOPATH="$(TEMP_DIR)" make all
-	cd $(CURR_DIR)
-	cp $(TEMP_DIR)/bin/* .
 
 docker-build: clean ## Create a build in Docker
 	./scripts/docker-image.sh
@@ -84,5 +71,5 @@ clean: ## Remove existing binaries
 help: ## Display usage information
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m%-31s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: help,cleanroom,envcheck,restore,docker-build,docker-package
+.PHONY: help,envcheck,docker-build,docker-package
 .DEFAULT_GOAL := help
