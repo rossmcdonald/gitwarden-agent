@@ -36,7 +36,7 @@ tmpdir="$(mktemp -d)"
 echo "Using temp dir: $tmpdir"
 
 # Create directory structure under temp dir
-dirs=( "/usr/sbin" "/etc/gitwarden" "/usr/lib/gitwarden" )
+dirs=( "/usr/sbin" "/etc/gitwarden" "/usr/lib/gitwarden" "/var/lib/gitwarden" )
 for dir in ${dirs[@]}; do
     mkdir -p $tmpdir/$dir
 done
@@ -55,7 +55,7 @@ for t in ${package_types[@]}; do
     fpm -f -s dir -t $t \
         -v "$version" \
         -n "gitwarden-agent" \
-       --vendor "SummonryLabs LLC" \
+        --vendor "SummonryLabs LLC" \
         --url "https://github.com/gitwarden/gitwarden-agent" \
         --license "apache2" \
         --maintainer "support@gitwarden.com" \
