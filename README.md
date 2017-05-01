@@ -12,8 +12,8 @@ The easiest method for installing the agent is to run the following command from
 curl -sL https://archives.gitwarden.com/install.sh | \
   KEY=afghanistan \
   SECRET=bananistan \
-  TEAMS=("Employees") \
-  ADMIN_TEAMS=("System Admins" "Support") \
+  TEAMS="Employees,Contractors" \
+  ADMIN_TEAMS="System Admins,Support" \
   sudo bash -
 ```
 
@@ -23,11 +23,11 @@ Be sure to either include the necessary environment variables as referenced in t
 
 * `SECRET` is the API secret for the corresponding API key above. This is also obtainable through the [GitWarden dashboard](https://gitwarden.com).
 
-* `TEAMS` is an array of Github team names, where the members of each team should have accounts created for them on the local system.
+* `TEAMS` is a comma-delimited string of Github team names, where the members of each team should have accounts created for them on the local system.
 
 An optional variable is:
 
-* `ADMIN_TEAMS` is an array of Github team names that should have administrative (`sudo`) access on the local system. Similar to `TEAMS` above, members of the `ADMIN_TEAMS` teams will have user accounts created for them on the local system with `sudo` access.
+* `ADMIN_TEAMS` is a comma-delimited string of Github team names that should have administrative (`sudo`) access on the local system. Similar to `TEAMS` above, members of the `ADMIN_TEAMS` teams will have user accounts created for them on the local system with `sudo` access.
 
 The `install.sh` script is the same script located under the `scripts/` directory, and is synced on a nightly basis. We recommend reviewing the script prior to running it.
 
