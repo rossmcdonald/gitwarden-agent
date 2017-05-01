@@ -114,6 +114,18 @@ Once registered, you will want to make sure the service is running:
 service gitwarden-agent restart
 ```
 
+### Troubleshooting
+
+If any issues are encountered with the agent, it would be great if you could provide us with any logs or messages. On non-systemd systems, logs are located at `/var/log/gitwarden-agent.log`. On systemd systems, logs can be located with the command `journalctl -u gitwarden-agent`. 
+
+#### Debug Logging
+
+If the error continues to occur but the logs aren't useful, you may need to enable debug logging. This can be done by setting the `log_level` configuration option to `DEBUG`. For example, adding this to your configuration:
+
+```
+log_level: DEBUG
+```
+
 ### Issues?
 
 For questions or problems, please either open a Github issue against this repository or send an email to support@gitwarden.com.
