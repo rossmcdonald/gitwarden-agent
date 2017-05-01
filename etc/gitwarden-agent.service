@@ -4,7 +4,7 @@ Documentation=https://gitwarden.com/documentation/
 After=network-online.target
 
 [Service]
-ExecStart=/usr/sbin/gitwarden-agent
+ExecStart=/usr/sbin/gitwarden-agent run
 Restart=on-failure
 
 [Install]

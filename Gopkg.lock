@@ -1,4 +1,4 @@
-memo = "102004fc93144226ac479388ca64d28c1b2bed3bd321bdb3045e59ced2f1e86b"
+memo = "0f667a64a2335994bd1da94a2980d6015efaa98e7c1b9dd70fbd455249f18508"
 
 [[projects]]
   name = "github.com/Sirupsen/logrus"
@@ -17,6 +17,12 @@ memo = "102004fc93144226ac479388ca64d28c1b2bed3bd321bdb3045e59ced2f1e86b"
   name = "github.com/hashicorp/hcl"
   packages = [".","hcl/ast","hcl/parser","hcl/scanner","hcl/strconv","hcl/token","json/parser","json/scanner","json/token"]
   revision = "7fa7fff964d035e8a162cce3a164b3ad02ad651b"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/inconshreveable/mousetrap"
+  packages = ["."]
+  revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
 
 [[projects]]
   name = "github.com/magiconair/properties"
@@ -56,6 +62,12 @@ memo = "102004fc93144226ac479388ca64d28c1b2bed3bd321bdb3045e59ced2f1e86b"
 
 [[projects]]
   branch = "master"
+  name = "github.com/spf13/cobra"
+  packages = ["."]
+  revision = "bc8a58ff4dd5c544249f2bf6763302f1914eafea"
+
+[[projects]]
+  branch = "master"
   name = "github.com/spf13/jwalterweatherman"
   packages = ["."]
   revision = "fa7ca7e836cf3a8bb4ebf799f472c12d7e903d66"
@@ -64,7 +76,7 @@ memo = "102004fc93144226ac479388ca64d28c1b2bed3bd321bdb3045e59ced2f1e86b"
   branch = "master"
   name = "github.com/spf13/pflag"
   packages = ["."]
-  revision = "314c91c3e94238576bab29cbcdd44b57ab8e0d39"
+  revision = "f1d95a35e132e8a1868023a08932b14f0b8b8fcb"
 
 [[projects]]
   branch = "master"
@@ -76,13 +88,13 @@ memo = "102004fc93144226ac479388ca64d28c1b2bed3bd321bdb3045e59ced2f1e86b"
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "ea9bcade75cb975a0b9738936568ab388b845617"
+  revision = "9ccfe848b9db8435a24c424abbc07a921adf1df5"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/text"
   packages = ["internal/gen","internal/triegen","internal/ucd","transform","unicode/cldr","unicode/norm"]
-  revision = "a9a820217f98f7c8a207ec1e45a874e1fe12c478"
+  revision = "470f45bf29f4147d6fbd7dfd0a02a848e49f5bf4"
 
 [[projects]]
   branch = "v2"

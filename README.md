@@ -50,7 +50,7 @@ gpgkey=https://archives.gitwarden.com/gitwarden.key
 
 Or copy and paste the command:
 
-```
+```sh
 cat <<EOF | sudo tee /etc/yum.repos.d/gitwarden.repo
 [gitwarden]
 name=GitWarden Package Repository
@@ -63,22 +63,22 @@ EOF
 
 Once the repository is configured, install the agent with the command:
 
-```
-yum install gitwarden-agent
+```sh
+yum install gitwarden-agent -y
 ```
 
 ##### apt
 
 Run the commands below:
 
-```
+```sh
 curl -sL https://archives.gitwarden.com/gitwarden.key | sudo apt-key add -
 echo "deb https://archives.gitwarden.com/deb squeeze main" | sudo tee /etc/apt/sources.list.d/gitwarden.list
 ```
 
 The `squeeze` in the second command above can be replaced with your current distribution codename (precise, jessie, etc), however they are interchangeable. Once the commands above have been run successfully, you can install the agent with the command:
 
-```
+```sh
 apt-get update && apt-get install gitwarden-agent -y
 ```
 
@@ -88,13 +88,13 @@ If you used the script installation referenced above, then you do not need to pe
 
 To set your API key, add the following entry to the configuration located at `/etc/gitwarden/gitwarden.yml`:
 
-```
+```yml
 api_key: YOURAPIKEYHERE
 ```
 
 In addition to the `api_key` setting, you will also want to set which teams should have access to the instance. This makes the final configuration look something like:
 
-```
+```yml
 api_key: YOURAPIKEYHERE
 teams:
   - People
@@ -104,14 +104,18 @@ admin_teams:
 
 And then register the agent with the command:
 
-```
-GITWARDEN_SECRET="YOURSECRETHERE" sudo gitwarden-agent --register
+```sh
+GITWARDEN_SECRET="YOURSECRETHERE" sudo gitwarden-agent register
 ```
 
 Once registered, you will want to make sure the service is running:
 
-```
+```sh
+# sysv systems (and some systemd systems)
 service gitwarden-agent restart
+
+# systemd systems
+systemctl restart gitwarden-agent
 ```
 
 ### Troubleshooting
@@ -122,7 +126,7 @@ If any issues are encountered with the agent, it would be great if you could pro
 
 If the error continues to occur but the logs aren't useful, you may need to enable debug logging. This can be done by setting the `log_level` configuration option to `DEBUG`. For example, adding this to your configuration:
 
-```
+```yml
 log_level: DEBUG
 ```
 

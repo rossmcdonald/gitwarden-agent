@@ -35,6 +35,7 @@ import (
 	"time"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"gopkg.in/yaml.v2"
 )
@@ -757,19 +758,48 @@ func applyDeployment(dep *Deployment) error {
 	return nil
 }
 
-func init() {
-	if version == "" {
-		version = "?"
+func registerAgent() {
+	apiKey := config.GetString("api_key")
+	apiSecret := config.GetString("api_secret")
+
+	if apiKey == "" {
+		// Error out if apiKey is not specified
+		log.Fatal("An API key must be specified to continue. Please visit https://gitwarden.com for more information.")
 	}
-	if commit == "" {
-		commit = "?"
+
+	if apiSecret == "" {
+		// Error out if apiSecret is not specified
+		log.Fatal("An API secret must be provided in order to register. Please visit https://gitwarden.com for more information.")
 	}
-	if branch == "" {
-		branch = "?"
+
+	teams := config.GetStringSlice("teams")
+	admin_teams := config.GetStringSlice("admin_teams")
+	if len(teams) <= 0 {
+		log.Fatalf("A 'teams' list must be specified in order to continue. Please see https://gitwarden.com/documentation/getting-started for more information.")
+	}
+	deploymentID, err := register(apiKey, apiSecret, teams, admin_teams)
+	if err != nil {
+		log.Fatalf("Encountered error when registering with GitWarden registry: %s", err)
+	}
+	appData.Set("deployment_id", deploymentID)
+
+	log.Debugf("Persisting application data to: %s", appData.ConfigFileUsed())
+	data, err := yaml.Marshal(appData.AllSettings())
+	if err != nil {
+		log.Errorf("Could not retrieve agent data: %s", err)
+	}
+	err = ioutil.WriteFile(appData.ConfigFileUsed(), data, 0640)
+	if err != nil {
+		log.Errorf("Could not persist agent data to %s: %s", appData.ConfigFileUsed(), err)
 	}
 }
 
-func main() {
+func initConfig() {
+	log.SetFormatter(&log.TextFormatter{
+		FullTimestamp: true,
+		DisableColors: true,
+	})
+
 	config.SetEnvPrefix("gitwarden") // Look for env variables that start with GITWARDEN_
 	config.SetConfigName("gitwarden")
 	config.AddConfigPath("/etc/gitwarden/")
@@ -804,10 +834,6 @@ func main() {
 		log.Fatalf("Encountered error when reading config file: %s", err)
 	}
 
-	log.SetFormatter(&log.TextFormatter{
-		FullTimestamp: true,
-		DisableColors: true,
-	})
 	log.Infof("GitWarden Agent v%s (commit %s, branch %s)", version, commit, branch)
 	log.Infof("Using data file: %s", appData.ConfigFileUsed())
 	log.Infof("Using configuration file: %s", config.ConfigFileUsed())
@@ -826,61 +852,78 @@ func main() {
 	default:
 		log.SetLevel(log.InfoLevel)
 	}
+}
 
-	apiKey := config.GetString("api_key")
-	apiSecret := config.GetString("api_secret")
-	deploymentID := appData.GetString("deployment_id")
-
-	if apiKey == "" {
-		// Error out if apiKey is not specified
-		log.Fatal("An API key must be specified to continue. Please visit https://gitwarden.com for more information.")
+func init() {
+	if version == "" {
+		version = "?"
 	}
-
-	if deploymentID == "" {
-		// No deployment ID provided or found, start the registration process
-		if apiSecret == "" {
-			// Error out if apiSecret is not specified
-			log.Fatal("An API secret must be provided in order to register. Please visit https://gitwarden.com for more information.")
-		}
-
-		teams := config.GetStringSlice("teams")
-		admin_teams := config.GetStringSlice("admin_teams")
-		if len(teams) <= 0 {
-			log.Fatalf("A 'teams' list must be specified in order to continue. Please see https://gitwarden.com/documentation/getting-started for more information.")
-		}
-		deploymentID, err := register(apiKey, apiSecret, teams, admin_teams)
-		if err != nil {
-			log.Fatalf("Encountered error when registering with GitWarden registry: %s", err)
-		}
-		appData.Set("deployment_id", deploymentID)
-
-		log.Debugf("Persisting application data to: %s", appData.ConfigFileUsed())
-		data, err := yaml.Marshal(appData.AllSettings())
-		if err != nil {
-			log.Errorf("Could not retrieve agent data: %s", err)
-		}
-		err = ioutil.WriteFile(appData.ConfigFileUsed(), data, 0640)
-		if err != nil {
-			log.Errorf("Could not persist agent data to %s: %s", appData.ConfigFileUsed(), err)
-		}
+	if commit == "" {
+		commit = "?"
 	}
+	if branch == "" {
+		branch = "?"
+	}
+}
 
-	for {
-		// Main loop
-		d, err := pullDeployment(apiKey, appData.GetString("deployment_id"))
-		if err != nil {
-			log.Errorf("Encountered error when retrieving deployment: %s", err)
+func main() {
+	var cmdRun = &cobra.Command{
+		Use:   "run",
+		Short: "Run agent",
+		Run: func(cmd *cobra.Command, args []string) {
+			initConfig()
 
-			// FIXME(rossmcdonald) - Provide option for
-			// self-destructing (remove all users, groups, and wipe
-			// configuration) after a certain number of failures.
-		} else {
-			err = applyDeployment(d)
-			if err != nil {
-				log.Errorf("Encountered error when applying deployment configuration: ", err)
+			deploymentID := appData.GetString("deployment_id")
+			if deploymentID == "" {
+				// No deployment ID provided or found, start the registration process
+				registerAgent()
 			}
-		}
-		log.Debug("Sleeping... zzz")
-		time.Sleep(time.Duration(config.GetInt("refresh_interval")) * time.Minute)
+
+			apiKey := config.GetString("api_key")
+			if apiKey == "" {
+				// Error out if apiKey is not specified
+				log.Fatal("An API key must be specified to continue. Please visit https://gitwarden.com for more information.")
+			}
+
+			for {
+				// Main loop
+				d, err := pullDeployment(apiKey, appData.GetString("deployment_id"))
+				if err != nil {
+					log.Errorf("Encountered error when retrieving deployment: %s", err)
+
+					// FIXME(rossmcdonald) - Provide option for
+					// self-destructing (remove all users, groups, and wipe
+					// configuration) after a certain number of failures.
+				} else {
+					err = applyDeployment(d)
+					if err != nil {
+						log.Errorf("Encountered error when applying deployment configuration: ", err)
+					}
+				}
+				log.Debug("Sleeping... zzz")
+				time.Sleep(time.Duration(config.GetInt("refresh_interval")) * time.Minute)
+			}
+		},
 	}
+	var cmdRegister = &cobra.Command{
+		Use:   "register",
+		Short: "Register with the GitWarden service",
+		Long:  `register is used to register the local instance with the GitWarden Registry. This command requires an API secret being exposed through the environment. For example: SECRET=MYAPISECRET gitwarden register`,
+		Run: func(cmd *cobra.Command, args []string) {
+			initConfig()
+			registerAgent()
+		},
+	}
+	var cmdVersion = &cobra.Command{
+		Use:   "version",
+		Short: "Display version of the gitwarden-agent",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("v%s (commit %s, branch %s)\n", version, commit, branch)
+		},
+	}
+	var rootCmd = &cobra.Command{Use: "gitwarden-agent"}
+	rootCmd.AddCommand(cmdRegister)
+	rootCmd.AddCommand(cmdRun)
+	rootCmd.AddCommand(cmdVersion)
+	rootCmd.Execute()
 }

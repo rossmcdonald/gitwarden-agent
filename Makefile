@@ -61,7 +61,7 @@ get: ## Retrieve Go dependencies
 	PATH=$$PATH:$$GOPATH/bin dep ensure
 
 get-update: ## Retrieve updated Go dependencies
-	PATH=$$PATH:$$GOPATH/bin dep ensure-update
+	PATH=$$PATH:$$GOPATH/bin dep ensure -update
 
 clean: ## Remove existing binaries
 	@for target in gitwarden-agent; do \
