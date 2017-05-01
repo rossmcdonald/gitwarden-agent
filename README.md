@@ -45,6 +45,7 @@ name=GitWarden Package Repository
 baseurl=https://archives.gitwarden.com/rpm
 enabled=1
 gpgcheck=1
+repo_gpgcheck=1
 gpgkey=https://archives.gitwarden.com/gitwarden.key
 ```
 
@@ -57,6 +58,7 @@ name=GitWarden Package Repository
 baseurl=https://archives.gitwarden.com/rpm
 enabled=1
 gpgcheck=1
+repo_gpgcheck=1
 gpgkey=https://archives.gitwarden.com/gitwarden.key
 EOF
 ```
@@ -64,7 +66,7 @@ EOF
 Once the repository is configured, install the agent with the command:
 
 ```sh
-yum install gitwarden-agent -y
+sudo yum install gitwarden-agent -y
 ```
 
 ##### apt
@@ -79,7 +81,7 @@ echo "deb https://archives.gitwarden.com/deb squeeze main" | sudo tee /etc/apt/s
 The `squeeze` in the second command above can be replaced with your current distribution codename (precise, jessie, etc), however they are interchangeable. Once the commands above have been run successfully, you can install the agent with the command:
 
 ```sh
-apt-get update && apt-get install gitwarden-agent -y
+sudo apt-get update && sudo apt-get install gitwarden-agent -y
 ```
 
 ### Configuring
@@ -112,15 +114,15 @@ Once registered, you will want to make sure the service is running:
 
 ```sh
 # sysv systems (and some systemd systems)
-service gitwarden-agent restart
+sudo service gitwarden-agent restart
 
 # systemd systems
-systemctl restart gitwarden-agent
+sudo systemctl restart gitwarden-agent
 ```
 
 ### Troubleshooting
 
-If any issues are encountered with the agent, it would be great if you could provide us with any logs or messages. On non-systemd systems, logs are located at `/var/log/gitwarden-agent.log`. On systemd systems, logs can be located with the command `journalctl -u gitwarden-agent`. 
+If any issues are encountered with the agent, it would be great if you could provide us with any logs or messages. On non-systemd systems, logs are located at `/var/log/gitwarden-agent.log`. On systemd systems, logs can be located with the command `sudo journalctl -u gitwarden-agent`. 
 
 #### Debug Logging
 
