@@ -14,7 +14,7 @@ curl -sL https://archives.gitwarden.com/install.sh | \
   SECRET=bananistan \
   TEAMS="Employees,Contractors" \
   ADMIN_TEAMS="System Admins,Support" \
-  sudo bash -
+  sudo bash -E -
 ```
 
 Be sure to either include the necessary environment variables as referenced in the command above, or expose them via the environment to ensure the agent is properly configured. The required variables are:
