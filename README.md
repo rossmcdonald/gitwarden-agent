@@ -31,6 +31,16 @@ An optional variable is:
 
 The `install.sh` script is the same script located under the `scripts/` directory, and is synced on a nightly basis. We recommend reviewing the script prior to running it.
 
+#### Supported Distributions
+
+The following Linux distributions are supported (with more on the way):
+
+* Ubuntu - precise, trusty, wheezy, xenial, yakkety, zesty
+* Debian - squeeze, jessie
+* CentOS - 6, 7
+* RedHat EL - 6, 7
+* Amazon Linux - 2017.03, 2016.09, 2016.03, 2015.09, 2015.03
+
 #### Package Repository
 
 As an alternative to the scripted installation above, you can also configure your package manager to use the GitWarden package repository using the examples below.
