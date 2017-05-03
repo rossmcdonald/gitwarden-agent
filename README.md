@@ -10,8 +10,8 @@ The easiest method for installing the agent is to run the following command from
 
 ```sh
 curl -sL https://archives.gitwarden.com/install.sh | \
-  KEY=afghanistan \
-  SECRET=bananistan \
+  KEY=MYAPIKEYID \
+  SECRET=MYAPISECRET \
   TEAMS="Employees,Contractors" \
   ADMIN_TEAMS="System Admins,Support" \
   sudo bash -E -
