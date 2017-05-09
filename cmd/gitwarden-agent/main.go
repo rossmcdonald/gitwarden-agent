@@ -631,9 +631,10 @@ func applyDeployment(dep *Deployment) error {
 	mNewTeams := map[string]bool{}
 
 	for _, team := range dep.Teams {
+		// Mark this team as included in the latest deployment
 		mNewTeams[team.Name] = true
 
-		// Check to see if group exists
+		// Check to see if group exists for team
 		if _, ok := currentMapping[team.Name]; !ok {
 			// Group doesnt exist, create it
 			if err := createGroup(team.Name); err != nil {
@@ -745,6 +746,21 @@ func applyDeployment(dep *Deployment) error {
 				if err := removeUserFromGroup(user.Username, team.Name); err != nil {
 					log.Warnf("Encountered error when removing user '%s' from group '%s': %s", user.Username, team.Name, err)
 				}
+			}
+		}
+	}
+
+	// Compare users currently in the gitwarden-managed group, and remove
+	// any users not listed in this deployment
+	gwManagedUsers, err := getUsersInGroup("gitwarden-managed")
+	if err != nil {
+		log.Warn("Encountered error when retrieving users for the 'gitwarden-managed' group: %s", err)
+	} else {
+		for _, user := range gwManagedUsers {
+			if _, ok := mNewUsers[user]; !ok {
+				// If user is not present in the latest
+				// deployment, remove them
+				deleteUser(user)
 			}
 		}
 	}
