@@ -34,7 +34,6 @@ The `install.sh` script is the same script located under the `scripts/` director
 #### Package Repository
 
 As an alternative to the scripted installation above, you can also configure your package manager to use the GitWarden package repository using the examples below.
-
 ##### yum/dnf
 
 Write the contents below to the file `/etc/yum.repos.d/gitwarden.repo`:
