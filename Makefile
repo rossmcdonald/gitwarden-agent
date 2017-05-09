@@ -41,6 +41,9 @@ endif
 	$(COMPILE_PREPEND)go build $(COMPILE_PARAMS)./cmd/$@
 
 release: ## Tag and generate a release build (example: make release version=1.2.3)
+	git tag $(version)
+	git push origin --tags
+	make docker-package
 
 envcheck: ## Check environment for any common issues
 ifneq ($(shell which go &>/dev/null; echo $$?),0)
