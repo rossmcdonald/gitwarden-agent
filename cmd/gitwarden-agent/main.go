@@ -471,7 +471,7 @@ func createGroup(groupname string) error {
 // from the system user registry, their home directory is also erased. An error
 // is returned if the user could not be removed for any reason.
 func deleteUser(username string) error {
-	log.Info("Deleting user: ", username)
+	log.Infof("Deleting user: %s", username)
 	command := "userdel"
 	// FIXME - Remove (-r) should be an optional thing, and not assumed
 	params := []string{"-r", username}
@@ -757,10 +757,11 @@ func applyDeployment(dep *Deployment) error {
 		log.Warn("Encountered error when retrieving users for the 'gitwarden-managed' group: %s", err)
 	} else {
 		for _, user := range gwManagedUsers {
-			if _, ok := mNewUsers[user]; !ok {
+			if _, ok := mNewUsers[user.Username]; !ok {
 				// If user is not present in the latest
 				// deployment, remove them
-				deleteUser(user)
+				log.Infof("User '%s' is no longer present in any configured teams, removing...", user.Username)
+				deleteUser(user.Username)
 			}
 		}
 	}
