@@ -823,6 +823,7 @@ func initConfig() {
 		FullTimestamp: true,
 		DisableColors: true,
 	})
+	log.Infof("GitWarden Agent v%s (commit %s, branch %s)", version, commit, branch)
 
 	config.SetEnvPrefix("gitwarden") // Look for env variables that start with GITWARDEN_
 	config.SetConfigName("gitwarden")
@@ -852,16 +853,17 @@ func initConfig() {
 	appData.SetConfigType("yaml")
 	if err := appData.ReadInConfig(); err != nil {
 		log.Warnf("Could not read data file: %s", err)
+	} else {
+		log.Infof("Using data file: %s", appData.ConfigFileUsed())
 	}
 
 	config.SetConfigType("yaml")
 	if err := config.ReadInConfig(); err != nil {
 		log.Warnf("Could not read config file: %s", err)
+	} else {
+		log.Infof("Using configuration file: %s", config.ConfigFileUsed())
 	}
 
-	log.Infof("GitWarden Agent v%s (commit %s, branch %s)", version, commit, branch)
-	log.Infof("Using data file: %s", appData.ConfigFileUsed())
-	log.Infof("Using configuration file: %s", config.ConfigFileUsed())
 	appData.AutomaticEnv()
 	config.AutomaticEnv()
 
