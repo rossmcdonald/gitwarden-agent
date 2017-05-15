@@ -64,6 +64,11 @@ const (
 	// defaultRegistryURL is the URL used by the agent for contacting the
 	// GitWarden registry API.
 	defaultRegistryURL = "https://gitwarden.com"
+
+	// defaultPasswordlessAdmin is a boolean denoting whether team members
+	// of "admin_teams" Github teams should be able to run password-less
+	// sudo commands.
+	defaultPasswordlessAdmin = true
 )
 
 // config is the agent configuration
@@ -649,10 +654,12 @@ func applyDeployment(dep *Deployment) error {
 				if os.IsNotExist(err) {
 					log.Infof("Updating group '%s' to have administrative access", team.Name)
 
-					// FIXME(rossmcdonald) - Add option for
-					// password-less sudo access.
-
-					data := []byte(fmt.Sprintf("%%%s ALL=(ALL:ALL) ALL\n", team.Name))
+					var data []byte
+					if config.GetBool("passwordless_admin") {
+						data = []byte(fmt.Sprintf("%%%s ALL=(ALL) NOPASSWD: ALL\n", team.Name))
+					} else {
+						data = []byte(fmt.Sprintf("%%%s ALL=(ALL) ALL\n", team.Name))
+					}
 					log.Debugf("Writing sudoers file %s for group %s with contents: %s", sudoersPath, team.Name, strings.Trim(string(data), "\n"))
 					err = ioutil.WriteFile(sudoersPath, data, 0440)
 					if err != nil {
@@ -833,6 +840,7 @@ func initConfig() {
 	config.SetDefault("refresh_interval", defaultRefreshIntervalMin)
 	config.SetDefault("log_level", defaultLogLevel)
 	config.SetDefault("registry_url", defaultRegistryURL)
+	config.SetDefault("passwordless_admin", defaultPasswordlessAdmin)
 
 	hostname, err := os.Hostname()
 	if err != nil {
