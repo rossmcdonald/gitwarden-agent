@@ -144,7 +144,6 @@ function configure {
                 config="$config\n  - $team"
             done
         else
-            echo "TEST"
             config="$config\n  - $ADMIN_TEAMS"
         fi
     fi
