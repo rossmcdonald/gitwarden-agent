@@ -843,12 +843,12 @@ func initConfig() {
 
 	appData.SetConfigType("yaml")
 	if err := appData.ReadInConfig(); err != nil {
-		log.Fatalf("Encountered error when reading data file: %s", err)
+		log.Warnf("Could not read data file: %s", err)
 	}
 
 	config.SetConfigType("yaml")
 	if err := config.ReadInConfig(); err != nil {
-		log.Fatalf("Encountered error when reading config file: %s", err)
+		log.Warnf("Could not read config file: %s", err)
 	}
 
 	log.Infof("GitWarden Agent v%s (commit %s, branch %s)", version, commit, branch)
