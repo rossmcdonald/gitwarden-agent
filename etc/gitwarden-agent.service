@@ -1,6 +1,6 @@
 [Unit]
 Description=Linux user management agent, used for communicating with the GitWarden registry
-Documentation=https://gitwarden.com/documentation/
+Documentation=https://gitwarden.com/docs
 After=network-online.target
 
 [Service]
