@@ -57,6 +57,12 @@ docker-build: clean ## Create a build in Docker
 docker-package: docker-build ## Generate packages in Docker
 	./scripts/docker-package.sh
 
+docker-image: ## Generate a Docker image for Docker Hub - RUN AFTER UPDATING REPO
+	docker build --no-cache -t gitwarden/gitwarden-agent:v$(GIT_TAG) -f Dockerfile .
+	docker tag gitwarden/gitwarden-agent:v$(GIT_TAG) gitwarden/gitwarden-agent:latest
+	docker push gitwarden/gitwarden-agent:v$(GIT_TAG)
+	docker push gitwarden/gitwarden-agent:latest
+
 package: ## Generate packages
 	./scripts/package.sh
 
@@ -74,5 +80,5 @@ clean: ## Remove existing binaries
 help: ## Display usage information
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m%-31s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: help,envcheck,docker-build,docker-package
+.PHONY: help,envcheck,docker-build,docker-package,docker-image,package,get,get-update
 .DEFAULT_GOAL := help
