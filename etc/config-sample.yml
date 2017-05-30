@@ -10,7 +10,6 @@ api_key: CHANGEME
 # GITWARDEN_TEAMS environment variable. This option is _required_.
 
 teams:
-  - Developers
 
 # admin_teams is a list of Github teams that should be given administrative
 # access on the bootstrapped server. If not specified, no users created will be
@@ -18,8 +17,6 @@ teams:
 # variable.
 
 admin_teams:
-  - System Administrators
-  - Support
 
 # log_level dictates the granularity of the agent logs. If not specified, it
 # will default to INFO. Can be overridden via the GITWARDEN_LOG_LEVEL
