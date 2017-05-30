@@ -852,7 +852,25 @@ func initConfig() {
 
 	appData.SetConfigType("yaml")
 	if err := appData.ReadInConfig(); err != nil {
-		log.Warnf("Could not read data file: %s", err)
+		// Could not read data file
+		if _, sErr := os.Stat("/var/lib/gitwarden"); sErr == nil {
+			// The data directory exists, create stub file
+			// and retry
+			ioErr := ioutil.WriteFile("/var/lib/gitwarden/gitwarden-data.yml", []byte(""), 0640)
+			if ioErr != nil {
+				log.Fatalf("Could not find writable location for data file. Tried: /var/lib/gitwarden/gitwarden-data.yml")
+			}
+			// Stub written, try refreshing configuration
+			if confErr := appData.ReadInConfig(); confErr != nil {
+				log.Fatalf("Could not find a readable data file: %s", confErr)
+			}
+			log.Infof("Using data file: %s", appData.ConfigFileUsed())
+		} else {
+			// Default data directory doesn't exist, we
+			// won't be able to persist data anywhere, we
+			// should fail out.
+			log.Fatalf("Could not find a readable data file: %s", err)
+		}
 	} else {
 		log.Infof("Using data file: %s", appData.ConfigFileUsed())
 	}
